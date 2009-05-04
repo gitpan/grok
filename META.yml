@@ -1,7 +1,7 @@
 ---
 abstract: 'Perl 6 documentation reader'
 author:
-  - 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>'
+  - 'Hinrik Ã–rn SigurÃ°sson <hinrik.sig@gmail.com>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
   Test::More: 0
@@ -28,4 +28,4 @@ requires:
   perl: 5.6.0
 resources:
   license: http://opensource.org/licenses/artistic-license-2.0.php
-version: 0.01
+version: 0.02
