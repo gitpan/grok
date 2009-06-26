@@ -11,7 +11,7 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 my %opt;
 
 sub new {
@@ -62,7 +62,7 @@ sub find_synopsis {
     # we override this during testing
     my $share = defined $ENV{GROK_SHAREDIR}
         ? $ENV{GROK_SHAREDIR}
-        : dist_dir('App-Grok')
+        : dist_dir('grok')
     ;
     my $dir = catdir($share, 'Spec');
 
