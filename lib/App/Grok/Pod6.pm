@@ -6,7 +6,7 @@ use Perl6::Perldoc::Parser;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub new {
     my ($package, %self) = @_;
@@ -27,6 +27,8 @@ sub render {
 }
 
 1;
+
+=encoding UTF-8
 
 =head1 NAME
 
