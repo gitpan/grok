@@ -6,7 +6,7 @@ use Perl6::Perldoc::Parser;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub new {
     my ($package, %self) = @_;
@@ -33,6 +33,18 @@ sub render {
 =head1 NAME
 
 App::Grok::Pod6 - A Pod 6 backend for grok
+
+=head1 METHODS
+
+=head2 C<new>
+
+This is the constructor. It currently takes no arguments.
+
+=head2 C<render>
+
+Takes two arguments, a filename and the name of an output format. Returns
+a string containing the rendered document. It will C<die> if there is an
+error.
 
 =head1 AUTHOR
 

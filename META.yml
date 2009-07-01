@@ -21,6 +21,7 @@ no_index:
     - share
     - t
     - t_source
+    - xt
 requires:
   File::ShareDir: 0
   File::Temp: 0
@@ -32,5 +33,7 @@ requires:
   Pod::Xhtml: 0
   perl: 5.6.0
 resources:
+  homepage: http://svn.pugscode.org/pugs/docs/u4x/README
   license: http://opensource.org/licenses/artistic-license-2.0.php
-version: 0.08
+  repository: git://github.com/hinrik/grok.git
+version: 0.09

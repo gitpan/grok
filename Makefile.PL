@@ -12,6 +12,8 @@ install_script ('script/grok');
 no_index       (directory => 't_source');
 install_share  ();
 license        ('artistic_2');
+homepage       ('http://svn.pugscode.org/pugs/docs/u4x/README');
+githubmeta     ();
 requires       ('Getopt::Long'             => '2.33');
 requires       ('IO::Interactive'          => '0');
 requires       ('File::ShareDir'           => '0');
@@ -24,5 +26,6 @@ requires       ('Win32::Console::ANSI'     => '0') if $^O eq 'MSWin32';
 test_requires  ('Test::More'               => '0');
 test_requires  ('Test::Script'             => '0');
 tests_recursive();
+recursive_author_tests('xt');
 WriteAll();
 

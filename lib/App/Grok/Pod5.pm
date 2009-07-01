@@ -3,7 +3,7 @@ package App::Grok::Pod5;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub new {
     my ($package, %self) = @_;
@@ -17,7 +17,9 @@ sub render {
         ? 'Pod::Text::Color'
         : $format eq 'xhtml'
             ? 'Pod::Xhtml'
-            : 'Pod::Text'
+            : $format eq 'text'
+                ? 'Pod::Text'
+                : die "Unsupported format '$format'";
     ;
 
     eval "require $formatter";
@@ -27,6 +29,7 @@ sub render {
     open my $out_fh, '>', \$pod or die "Can't open output filehandle: $!";
     binmode $out_fh, ':utf8';
     $formatter->new->parse_from_file($file, $out_fh);
+    close $out_fh;
     return $pod;
 }
 
@@ -37,6 +40,18 @@ sub render {
 =head1 NAME
 
 App::Grok::Pod5 - A Pod 5 backend for grok
+
+=head1 METHODS
+
+=head2 C<new>
+
+This is the constructor. It currently takes no arguments.
+
+=head2 C<render>
+
+Takes two arguments, a filename and the name of an output format. Returns
+a string containing the rendered document. It will C<die> if there is an
+error.
 
 =head1 AUTHOR
 

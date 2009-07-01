@@ -1,3 +1,9 @@
+0.09 Wed Jul  1 17:05:31 GMT 2009
+    - Add some author tests (Pod, Perl::Critic, etc)
+    - Detect whether a file contains Pod 5 or Pod 6
+    - Add homepage and source repository to Makefile.PL
+    - Refactor the code a bit and document public methods
+
 0.08 Wed Jul  1 14:14:10 GMT 2009
     - Add -i/--index to list known targets
     - Rename -v (--version) option to -V

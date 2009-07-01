@@ -11,7 +11,7 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 my %opt;
 
 sub new {
@@ -28,20 +28,17 @@ sub new {
 sub run {
     my ($self) = @_;
 
-    $self->get_options();
-    my ($target, $renderer);
+    $self->_get_options();
 
     if ($opt{index}) {
         print $self->target_index();
         return;
     }
 
-    if (defined $opt{file}) {
-        ($target, $renderer) = ($opt{file}, 'App::Grok::Pod6');
-    }
-    else {
-        ($target, $renderer) = $self->find_target($ARGV[0]);
-    }
+    my $target = defined $opt{file}
+        ? $opt{file}
+        : $self->find_target($ARGV[0])
+    ;
 
     die "No matching files found for target '$target'" if !-e $target;
 
@@ -49,11 +46,14 @@ sub run {
         print "$target\n";
     }
     else {
-        $self->render_file($target, $renderer);
+        my $output = $self->render_file($target, $opt{format});
+        $self->_print($output);
     }
+
+    return;
 }
 
-sub get_options {
+sub _get_options {
     my ($self) = @_;
 
     GetOptions(
@@ -66,7 +66,12 @@ sub get_options {
         'V|version'  => sub { print "grok $VERSION\n"; exit },
     ) or pod2usage();
 
-    die "Too few arguments\n" if !$opt{index} && !defined $opt{file} && !@ARGV;
+    if (!$opt{index} && !defined $opt{file} && !@ARGV) {
+        warn "Too few arguments\n";
+        pod2usage();
+    }
+
+    return;
 }
 
 sub target_index {
@@ -85,15 +90,33 @@ sub target_index {
     return join("\n", @index) . "\n";
 }
 
+sub detect_source {
+    my ($self, $file) = @_;
+
+    open my $handle, '<', $file or die "Can't open $file";
+    my $contents = do { local $/ = undef; scalar <$handle> };
+    close $handle;
+
+    my ($first_pod) = $contents =~ /(^=(?!encoding)\S+)/m;
+    return if !defined $first_pod; # no Pod found
+
+    if ($first_pod =~ /^=(?:pod|head\d+|over)$/
+            || $contents =~ /^=cut\b/m) {
+        return 'App::Grok::Pod5';
+    }
+    else {
+        return 'App::Grok::Pod6';
+    }
+}
+
 sub find_target {
     my ($self, $arg) = @_;
 
-    my ($target, $renderer);
-    ($target, $renderer) = $self->find_synopsis($arg);
-    ($target, $renderer) = $self->find_file($arg) if !defined $target;
+    my $target = $self->find_synopsis($arg);
+    $target = $self->find_module_or_program($arg) if !defined $target;
 
-    die "Target '$arg' not recognized\n" if !$target;
-    return ($target, $renderer);
+    return if !defined $target;
+    return $target;
 }
 
 sub find_synopsis {
@@ -105,13 +128,7 @@ sub find_synopsis {
         my $found = first { /$syn/i } @synopses;
         
         return if !defined $found;
-
-        if ($found =~ /^S26/) {
-            return (catfile($dir, $found), 'App::Grok::Pod6');
-        }
-        else {
-            return (catfile($dir, $found), 'App::Grok::Pod5');
-        }
+        return catfile($dir, $found);
     }
     elsif (my ($section) = $syn =~ /^S32-(\S+)$/i) {
         my $S32_dir = catdir($dir, 'S32-setting-library');
@@ -119,34 +136,39 @@ sub find_synopsis {
         my $found = first { /$section/i } @sections;
         
         if (defined $found) {
-            return (catfile($S32_dir, $found), 'App::Grok::Pod5');
+            return catfile($S32_dir, $found);
         }
     }
 
     return;
 }
 
-sub find_file {
+sub find_module_or_program {
     my ($self, $file) = @_;
 
     # TODO: do a grand search
-    return ($file, 'App::Grok::Pod6');
+    return $file;
 }
 
 sub render_file {
-    my ($self, $file, $renderer) = @_;
+    my ($self, $file, $format) = @_;
     
+    my $renderer = $self->detect_source($file);
     eval "require $renderer";
     die $@ if $@;
-    my $pod = $renderer->new->render($file, $opt{format});
+    return $renderer->new->render($file, $format);
+}
+
+sub _print {
+    my ($self, $output) = @_;
 
     if ($opt{no_pager} || !is_interactive()) {
-        print $pod;
+        print $output;
     }
     else {
         my $pager = $Config{pager};
         my ($temp_fh, $temp) = tempfile(UNLINK => 1);
-        print $temp_fh $pod;
+        print $temp_fh $output;
         close $temp_fh;
 
         # $pager might contain options (e.g. "more /e") so we pass a string
@@ -155,6 +177,8 @@ sub render_file {
             : system $pager . qq{ '$temp'}
         ;
     }
+
+    return;
 }
 
 1;
@@ -164,6 +188,55 @@ sub render_file {
 =head1 NAME
 
 App::Grok - Does most of grok's heavy lifting
+
+=head1 DESCRIPTION
+
+This class provides the main functionality needed by grok. It has some
+methods you can use if you need to hook into grok.
+
+=head1 METHODS
+
+=head2 C<new>
+
+This is the constructor. It takes no arguments.
+
+=head2 C<run>
+
+If you call this method, it will look at the command line arguments in
+C<@ARGV> and act accordingly. This is basically what the L<C<grok>|grok>
+program does. Takes no arguments.
+
+=head2 C<target_index>
+
+Takes no arguments. Returns a list of all the targets known to C<grok>.
+
+=head2 C<detect_source>
+
+Takes a filename as an argument. Returns the name of the appropriate
+C<App::Grok::*> class to parse it. Returns nothing if the file doesn't contain
+any Pod.
+
+=head2 C<find_target>
+
+Takes a valid C<grok> target as an argument. If found, it will return a path
+to a matching file, otherwise it returns nothing.
+
+=head2 C<find_synopsis>
+
+Takes the name (or a substring of a name) of a Synopsis as an argument.
+Returns a path to a matching file if one is found, otherwise returns nothing.
+Note: this method is called by L<C<find_target>|/find_target>.
+
+=head2 C<find_module_or_program>
+
+Takes the name of a module or a program. Returns a path to a matching file
+if one is found, otherwise returns nothing.
+
+=head2 C<render_file>
+
+Takes two arguments, a filename and the name of an output format. Returns
+a string containing the rendered document. It will C<die> if there is an
+error.
 
 =head1 AUTHOR
 
