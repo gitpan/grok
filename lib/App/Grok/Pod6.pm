@@ -6,7 +6,7 @@ use Perl6::Perldoc::Parser;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.08';
 
 sub new {
     my ($package, %self) = @_;
@@ -16,14 +16,14 @@ sub new {
 sub render {
     my ($self, $file, $format) = @_;
 
-    $format eq 'ansi'
-        ? require Perl6::Perldoc::To::Ansi
-        : require Perl6::Perldoc::To::Text
-    ;
+    die "Format $format unsupported" if $format !~ /^(?:ansi|text|xhtml)$/;
+    eval "require Perl6::Perldoc::To::\u$format";
+    die $@ if $@;
 
+    my $method = "to_$format";
     return Perl6::Perldoc::Parser->parse($file, {all_pod=>'auto'})
                                  ->report_errors()
-                                 ->to_text();
+                                 ->$method();
 }
 
 1;

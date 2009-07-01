@@ -3,7 +3,7 @@ package App::Grok::Pod5;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.08';
 
 sub new {
     my ($package, %self) = @_;
@@ -15,7 +15,9 @@ sub render {
 
     my $formatter = $format eq 'ansi'
         ? 'Pod::Text::Color'
-        : 'Pod::Text'
+        : $format eq 'xhtml'
+            ? 'Pod::Xhtml'
+            : 'Pod::Text'
     ;
 
     eval "require $formatter";

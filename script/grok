@@ -17,11 +17,12 @@ B<grok> <options> <target>
 
  Options:
    -F FILE, --file=FILE         A file to read Pod 6 from
-   -f FORMAT, --format=FORMAT   The output format, ansi(default) or text
+   -f FORMAT, --format=FORMAT   The output format, ansi/text/xhtml
    -h, --help                   Print this help message
+   -i, --index                  Print index of things grok knows about
    -l, --only                   Only print the path to the target file
    -T, --no-pager               Send output to STDOUT without any pager
-   -v, --version                Print version information
+   -V, --version                Print version information
 
  If you don't supply the -F option, you need to supply a target.
  The following targets are recognized:
