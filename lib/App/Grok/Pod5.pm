@@ -3,34 +3,43 @@ package App::Grok::Pod5;
 use strict;
 use warnings;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
+
+my %formatter = (
+    text  => 'Pod::Text',
+    ansi  => 'Pod::Text::Color',
+    xhtml => 'Pod::Xhtml',
+    pod   => 'Pod::Perldoc::ToPod',
+);
 
 sub new {
     my ($package, %self) = @_;
     return bless \%self, $package;
 }
 
-sub render {
+sub render_file {
     my ($self, $file, $format) = @_;
 
-    my $formatter = $format eq 'ansi'
-        ? 'Pod::Text::Color'
-        : $format eq 'xhtml'
-            ? 'Pod::Xhtml'
-            : $format eq 'text'
-                ? 'Pod::Text'
-                : die "Unsupported format '$format'";
-    ;
-
-    eval "require $formatter";
+    my $form = $formatter{$format};
+    die __PACKAGE__ . " doesn't support the '$format' format" if !defined $form;
+    eval "require $form";
     die $@ if $@;
 
     my $pod = '';
     open my $out_fh, '>', \$pod or die "Can't open output filehandle: $!";
-    binmode $out_fh, ':utf8';
-    $formatter->new->parse_from_file($file, $out_fh);
+    binmode $out_fh, ':utf8' if $form ne 'Pod::Perldoc::ToPod';
+    $form->new->parse_from_file($file, $out_fh);
     close $out_fh;
     return $pod;
+}
+
+sub render_string {
+    my ($self, $string, $format) = @_;
+
+    open my $handle, '<', \$string or die "Can't open input filehandle: $!";
+    my $result = $self->render_file($handle, $format);
+    close $handle;
+    return $result;
 }
 
 1;
@@ -47,9 +56,15 @@ App::Grok::Pod5 - A Pod 5 backend for grok
 
 This is the constructor. It currently takes no arguments.
 
-=head2 C<render>
+=head2 C<render_file>
 
 Takes two arguments, a filename and the name of an output format. Returns
+a string containing the rendered document. It will C<die> if there is an
+error.
+
+=head2 C<render_string>
+
+Takes two arguments, a string and the name of an output format. Returns
 a string containing the rendered document. It will C<die> if there is an
 error.
 

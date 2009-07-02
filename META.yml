@@ -36,4 +36,4 @@ resources:
   homepage: http://svn.pugscode.org/pugs/docs/u4x/README
   license: http://opensource.org/licenses/artistic-license-2.0.php
   repository: git://github.com/hinrik/grok.git
-version: 0.09
+version: 0.10

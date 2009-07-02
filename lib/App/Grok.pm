@@ -11,7 +11,7 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 my %opt;
 
 sub new {
@@ -31,22 +31,28 @@ sub run {
     $self->_get_options();
 
     if ($opt{index}) {
-        print $self->target_index();
+        print join("\n", $self->target_index()) . "\n";
         return;
     }
 
-    my $target = defined $opt{file}
-        ? $opt{file}
-        : $self->find_target($ARGV[0])
-    ;
-
-    die "No matching files found for target '$target'" if !-e $target;
+    my $target = defined $opt{file} ? $opt{file} : $ARGV[0];
 
     if ($opt{only}) {
-        print "$target\n";
+        my $file = $opt{file};
+        $file = $self->find_target_file($target) if !defined $file;
+        die "No matching file found for target '$target'\n" if !defined $file;
+        print $file, "\n";
     }
     else {
-        my $output = $self->render_file($target, $opt{format});
+        my $output;
+        if ($opt{file}) {
+            $output = $self->render_file($opt{file}, $opt{output});
+        }
+        else {
+            $output = $self->render_target($target, $opt{output});
+        }
+
+        die "Target '$target' not recognized\n" if !defined $output;
         $self->_print($output);
     }
 
@@ -57,12 +63,13 @@ sub _get_options {
     my ($self) = @_;
 
     GetOptions(
-        'F|file=s'   => \$opt{file},
-        'f|format=s' => \($opt{format} = 'ansi'),
-        'h|help'     => sub { pod2usage(1) },
-        'i|index'    => \$opt{index},
-        'l|only'     => \$opt{only},
-        'T|no-pager' => \$opt{no_pager},
+        'F|file=s'      => \$opt{file},
+        'h|help'        => sub { pod2usage(1) },
+        'i|index'       => \$opt{index},
+        'l|only'        => \$opt{only},
+        'o|output=s'    => \($opt{output} = 'ansi'),
+        'T|no-pager'    => \$opt{no_pager},
+        'u|unformatted' => sub { $opt{output} = 'pod' },
         'V|version'  => sub { print "grok $VERSION\n"; exit },
     ) or pod2usage();
 
@@ -74,20 +81,80 @@ sub _get_options {
     return;
 }
 
+# functions from synopsis 29
+sub read_functions {
+    my ($self) = @_;
+
+    return $self->{functions} if defined $self->{functions};
+
+    my %functions;
+    my $S29_file = catfile($self->{share_dir}, 'Spec', 'S29-functions.pod');
+
+    ## no critic (InputOutput::RequireBriefOpen)
+    open my $S29, '<', $S29_file or die "Can't open '$S29_file': $!";
+
+    # read until you find 'Function Packages'
+    until (<$S29> =~ /Function Packages/) {}
+
+    # parse the rest of S29 looking for Perl6 function documentation
+    my $function_name;
+    while (my $line = <$S29>) {
+        if (my ($directive, $title) = $line =~ /^=(\S+) +(.+)/) {
+            if ($directive eq 'item') {
+                # Found Perl6 function name
+                if (my ($reference) = $title =~ /-- (see S\d+.*)/) {
+                    # one-line entries
+                    (my $func = $title) =~ s/^(\S+).*/$1/;
+                    $functions{$func} = $reference;
+                }
+                else {
+                    $function_name = $title;
+                }
+            }
+            else {
+                $function_name = undef;
+            }
+        }
+        elsif ($function_name) {
+            # Adding documentation to the function name
+            $functions{$function_name} .= $line;
+        }
+    }
+
+    my %sanitized;
+    while (my ($func, $body) = each %functions) {
+        $sanitized{$func} = [$func, $body] if $func !~ /\s/;
+
+        if ($func =~ /,/) {
+            my @funcs = split /,\s+/, $func;
+            $sanitized{$_} = [$func, $body] for @funcs;
+        }
+    }
+
+    $self->{functions} = \%sanitized;
+    return $self->{functions};
+}
+
 sub target_index {
     my ($self) = @_;
     my $dir = catdir($self->{share_dir}, 'Spec');
     my @index;
 
+    # synopses
     my @synopses = map { (splitpath($_))[2] } glob "$dir/*.pod";
+    s/\.pod$// for @synopses;
     push @index, @synopses;
 
+    # synopsis 32
     my $S32_dir = catdir($dir, 'S32-setting-library');
     my @sections = map { (splitpath($_))[2] } glob "$S32_dir/*.pod";
+    s/\.pod$// for @sections;
     push @index, map { "S32-$_" } @sections;
 
-    s/\.pod$// for @index;
-    return join("\n", @index) . "\n";
+    # functions from synopsis 29
+    push @index, keys %{ $self->read_functions() };
+
+    return @index;
 }
 
 sub detect_source {
@@ -109,7 +176,7 @@ sub detect_source {
     }
 }
 
-sub find_target {
+sub find_target_file {
     my ($self, $arg) = @_;
 
     my $target = $self->find_synopsis($arg);
@@ -147,16 +214,38 @@ sub find_module_or_program {
     my ($self, $file) = @_;
 
     # TODO: do a grand search
-    return $file;
+    return $file if -e $file;
+    return;
+}
+
+sub render_target {
+    my ($self, $target, $output) = @_;
+
+    my $functions = $self->read_functions();
+    if (defined $functions->{$target}) {
+        my ($func, $body) = @{ $functions->{$target} };
+        my $renderer = 'App::Grok::Pod5';
+        eval "require $renderer";
+        die $@ if $@;
+        my $content = "=head1 $func\n\n$body";
+        return $renderer->new->render_string($content, $output);
+    }
+
+    my $file = $self->find_target_file($target);
+    if (defined $file) {
+        return $self->render_file($file, $output);
+    }
+
+    return;
 }
 
 sub render_file {
-    my ($self, $file, $format) = @_;
+    my ($self, $file, $output) = @_;
     
     my $renderer = $self->detect_source($file);
     eval "require $renderer";
     die $@ if $@;
-    return $renderer->new->render($file, $format);
+    return $renderer->new->render_file($file, $output);
 }
 
 sub _print {
@@ -210,13 +299,19 @@ program does. Takes no arguments.
 
 Takes no arguments. Returns a list of all the targets known to C<grok>.
 
+=head2 C<read_functions>
+
+Takes no arguments. Returns a hash reference of all function documentation
+from Synopsis 29. There will be a key for every function, with the value being
+a Pod snipped from Synopsis 29.
+
 =head2 C<detect_source>
 
 Takes a filename as an argument. Returns the name of the appropriate
 C<App::Grok::*> class to parse it. Returns nothing if the file doesn't contain
 any Pod.
 
-=head2 C<find_target>
+=head2 C<find_target_file>
 
 Takes a valid C<grok> target as an argument. If found, it will return a path
 to a matching file, otherwise it returns nothing.
@@ -225,18 +320,25 @@ to a matching file, otherwise it returns nothing.
 
 Takes the name (or a substring of a name) of a Synopsis as an argument.
 Returns a path to a matching file if one is found, otherwise returns nothing.
-Note: this method is called by L<C<find_target>|/find_target>.
+B<Note:> this method is called by L<C<find_target>|/find_target>.
 
 =head2 C<find_module_or_program>
 
 Takes the name of a module or a program. Returns a path to a matching file
-if one is found, otherwise returns nothing.
+if one is found, otherwise returns nothing. B<Note:> this doesn't do anything
+yet.
+
+=head2 C<render_target>
+
+Takes two arguments, a target and the name of an output format. Returns a
+string containing the rendered documentation, or nothing if the target is
+unrecognized.
 
 =head2 C<render_file>
 
 Takes two arguments, a filename and the name of an output format. Returns
-a string containing the rendered document. It will C<die> if there is an
-error.
+a string containing the rendered document. B<Note:> this method is called
+by L<C<render_target>|/render_target>.
 
 =head1 AUTHOR
 
