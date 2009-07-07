@@ -11,7 +11,7 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 my %opt;
 
 sub new {
@@ -152,7 +152,7 @@ sub target_index {
     push @index, map { "S32-$_" } @sections;
 
     # functions from synopsis 29
-    push @index, keys %{ $self->read_functions() };
+    push @index, sort keys %{ $self->read_functions() };
 
     return @index;
 }
@@ -190,14 +190,7 @@ sub find_synopsis {
     my ($self, $syn) = @_;
     my $dir = catdir($self->{share_dir}, 'Spec');
 
-    if ($syn =~ /^S\d+$/i) {
-        my @synopses = map { (splitpath($_))[2] } glob "$dir/*.pod";
-        my $found = first { /$syn/i } @synopses;
-        
-        return if !defined $found;
-        return catfile($dir, $found);
-    }
-    elsif (my ($section) = $syn =~ /^S32-(\S+)$/i) {
+    if (my ($section) = $syn =~ /^S32-(\S+)$/i) {
         my $S32_dir = catdir($dir, 'S32-setting-library');
         my @sections = map { (splitpath($_))[2] } glob "$S32_dir/*.pod";
         my $found = first { /$section/i } @sections;
@@ -205,6 +198,13 @@ sub find_synopsis {
         if (defined $found) {
             return catfile($S32_dir, $found);
         }
+    }
+    elsif ($syn =~ /^S\d+/i) {
+        my @synopses = map { (splitpath($_))[2] } glob "$dir/*.pod";
+        my $found = first { /\Q$syn/i } @synopses;
+        
+        return if !defined $found;
+        return catfile($dir, $found);
     }
 
     return;
@@ -255,7 +255,7 @@ sub _print {
         print $output;
     }
     else {
-        my $pager = $Config{pager};
+        my $pager = defined $ENV{PAGER} ? $ENV{PAGER} : $Config{pager};
         my ($temp_fh, $temp) = tempfile(UNLINK => 1);
         print $temp_fh $output;
         close $temp_fh;
