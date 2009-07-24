@@ -14,7 +14,7 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.16_01';
+our $VERSION = '0.16_02';
 my %opt;
 
 our $GOT_ANSI;
@@ -48,12 +48,12 @@ sub run {
 
     my $target = defined $opt{file} ? $opt{file} : $ARGV[0];
 
-    if ($opt{only}) {
+    if ($opt{locate}) {
         if (defined $opt{file}) {
             print file_locate($opt{file}), "\n";
         }
         else {
-            my $file = $self->locate_target();
+            my $file = $self->locate_target($target);
             defined $file
                 ? print $file, "\n"
                 : die "Target file not found\n";
@@ -145,6 +145,7 @@ sub render_target {
     $found = spec_fetch($target) if !defined $found;
     $found = table_fetch($target) if !defined $found;
     $found = file_fetch($target) if !defined $found;
+    die "Target '$target' not recognized\n" if !defined $found;
 
     my $parser = $self->detect_source($found);
     eval "require $parser";

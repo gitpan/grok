@@ -5,7 +5,7 @@ use warnings;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir catfile splitpath>;
 
-our $VERSION = '0.16_01';
+our $VERSION = '0.16_02';
 use base qw(Exporter);
 our @EXPORT_OK = qw(func_index func_fetch func_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -99,7 +99,7 @@ sub _read_functions {
 
         my @new_func;
         while (my $line = <$handle>) {
-            if (my ($directive, $title) = $line =~ /^=(\S+) +(.+)/) {
+            if (my ($directive, $title) = $line =~ /^=(\S+)(?: +(.+))?/) {
                 if (defined $new_func[NAME]) {
                     my $name = $new_func[NAME];
                     
@@ -123,7 +123,6 @@ sub _read_functions {
             elsif (defined $new_func[FILE]) {
                 # Adding documentation to the function name
                 $new_func[POD] .= $line;
-                #warn "new_func is now $new_func[1]\n";
             }
         }
 
