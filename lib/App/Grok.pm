@@ -11,12 +11,12 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 my %opt;
 
 our $GOT_ANSI;
 BEGIN {
-    if ($^O ne 'Win32') {
+    if ($^O eq 'Win32') {
         eval {
             require Win32::Console::ANSI;
             $GOT_ANSI = 1;
