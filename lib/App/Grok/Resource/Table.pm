@@ -5,7 +5,7 @@ use warnings;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catfile>;
 
-our $VERSION = '0.16_02';
+our $VERSION = '0.17';
 use base qw(Exporter);
 our @EXPORT_OK = qw(table_index table_fetch table_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -40,7 +40,10 @@ sub _build_table {
     while (my $line = <$table_handle>) {
         $entry = $1 if $line =~ /^=head2 C<<< (.+) >>>$/;
         $table{$entry} .= $line if defined $entry;
-    }   
+    }
+    while (my ($key, $value) = each %table) {
+        $table{$key} = "=encoding UTF-8\n\n$value";
+    }
 
     return;
 }
@@ -48,7 +51,7 @@ sub _build_table {
 1;
 =head1 NAME
 
-App::Grok::Resource::Table - Grok resource for the Perl 6 Table Index
+App::Grok::Resource::Table - Perl 6 Table Index resource for grok
 
 =head1 SYNOPSIS
 
