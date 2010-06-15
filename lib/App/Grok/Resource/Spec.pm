@@ -5,7 +5,7 @@ use warnings;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir splitpath>;
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 use base qw(Exporter);
 our @EXPORT_OK = qw(spec_index spec_fetch spec_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -21,7 +21,7 @@ sub spec_fetch {
     _build_index() if !%index;
     
     for my $doc (keys %index) {
-        if ($doc =~ /^$topic/i) {
+        if ($doc =~ /^\Q$topic/i) {
             open my $handle, '<', $index{$doc} or die "Can't open $index{$doc}: $!";
             my $pod = do { local $/ = undef; scalar <$handle> };
             close $handle;
