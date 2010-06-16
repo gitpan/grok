@@ -5,7 +5,7 @@ use warnings;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir catfile splitpath>;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(func_index func_fetch func_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -157,7 +157,7 @@ App::Grok::Resource::Functions - S29/S32 functions resource for grok
 This resource reads Synopses 29 and 32, and allows you to look up the
 functions therein.
 
-=head1 METHODS
+=head1 FUNCTIONS
 
 =head2 C<func_index>
 

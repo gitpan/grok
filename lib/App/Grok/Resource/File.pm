@@ -3,7 +3,7 @@ package App::Grok::Resource::File;
 use strict;
 use warnings;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(file_index file_fetch file_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -57,7 +57,7 @@ App::Grok::Resource::File - Standard file resource for grok
 
 This resource finds arbitrary documentation on the filesystem.
 
-=head1 METHODS
+=head1 FUNCTIONS
 
 =head2 C<file_index>
 
