@@ -1,14 +1,17 @@
 #!/usr/bin/env perl
 
 package grok;
+BEGIN {
+  $grok::VERSION = '0.22';
+}
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 use App::Grok;
 my $grok = App::Grok->new();
 $grok->run();
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 

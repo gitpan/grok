@@ -1,12 +1,16 @@
 package App::Grok::Parser::Pod6;
+BEGIN {
+  $App::Grok::Parser::Pod6::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Parser::Pod6::VERSION = '0.22';
+}
 
 # blows up if we use strict before this, damn source filter
 use Perl6::Perldoc::Parser;
 
 use strict;
-use warnings;
-
-our $VERSION = '0.21';
+use warnings FATAL => 'all';
 
 sub new {
     my ($package, %self) = @_;
@@ -40,7 +44,7 @@ sub render_string {
 
 1;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 

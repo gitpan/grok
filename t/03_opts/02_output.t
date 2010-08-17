@@ -1,9 +1,9 @@
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::Spec::Functions 'catfile';
 use Test::More tests => 14;
 
-my $script = catfile('script', 'grok');
+my $script = catfile('bin', 'grok');
 
 my $pod6 = catfile('t_source', 'basic.pod');
 my $pod6_text_short = qx/$^X $script -F $pod6 -o text/;

@@ -1,7 +1,13 @@
 package App::Grok::Common;
+BEGIN {
+  $App::Grok::Common::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Common::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::HomeDir qw<my_data>;
 use File::Spec::Functions qw<catdir>;
 
@@ -84,6 +90,8 @@ sub download {
 }
 
 1;
+
+=encoding utf8
 
 =head1 NAME
 

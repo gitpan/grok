@@ -1,10 +1,14 @@
 package App::Grok::Parser::Pod5;
+BEGIN {
+  $App::Grok::Parser::Pod5::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Parser::Pod5::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::Temp qw<tempfile>;
-
-our $VERSION = '0.21';
 
 my %formatter = (
     text  => 'Pod::Text',
@@ -56,7 +60,7 @@ sub render_string {
 
 1;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 

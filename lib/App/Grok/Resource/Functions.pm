@@ -1,11 +1,16 @@
 package App::Grok::Resource::Functions;
+BEGIN {
+  $App::Grok::Resource::Functions::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Resource::Functions::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir catfile splitpath>;
 
-our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(func_index func_fetch func_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -77,7 +82,7 @@ sub _read_functions {
 
     my %S29_sanitized;
     while (my ($func, $body) = each %S29_funcs) {
-        $body = "=encoding UTF-8\n\n=head2 C<<< $func >>>\n$body";
+        $body = "=encoding utf8\n\n=head2 C<<< $func >>>\n$body";
         $S29_sanitized{$func} = [$func, $body, $S29_file] if $func !~ /\s/;
 
         if ($func =~ /,/) {
@@ -115,7 +120,7 @@ sub _read_functions {
                     $title =~ s/^(\S+)\s*\(.*/$1/;
                     if ($title =~ /^\S+$/) {
                         $new_func[NAME] = $title;
-                        $new_func[POD] = "=encoding UTF-8\n\n=head2 C<<< $title >>>\n";
+                        $new_func[POD] = "=encoding utf8\n\n=head2 C<<< $title >>>\n";
                         $new_func[FILE] = $section;
                     }
                 }
@@ -133,6 +138,9 @@ sub _read_functions {
 }
 
 1;
+
+=encoding utf8
+
 =head1 NAME
 
 App::Grok::Resource::Functions - S29/S32 functions resource for grok

@@ -1,9 +1,9 @@
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::Spec::Functions 'catfile';
 use Test::More tests => 2;
 
-my $script = catfile('script', 'grok');
+my $script = catfile('bin', 'grok');
 my $result_short = qx/$^X $script -h/;
 my $result_long = qx/$^X $script --help/;
 

@@ -1,54 +1,40 @@
 NAME
-    grok - Perl 6 documentation reader
-
-SYNOPSIS
-    grok <options> <target>
-
-     Options:
-       -F FILE, --file=FILE         A file to read Pod from
-       -h, --help                   Print this help message
-       -i, --index                  Print index of things grok knows about
-       -l, --locate                 Locate the target file
-       -o FORMAT, --output=FORMAT   The output format, ansi/text/xhtml/pod
-       -T, --no-pager               Send output to STDOUT without any pager
-       -u, --unformatted            Print unformatted Pod output
-       -V, --version                Print version information
-
-     If you don't supply the -F or -i options, you need to supply a target.
-     The following targets are recognized:
-
-       * A Synopsis name ('s02', 's02-bits', 's32-rules')
-       * An Apocalypse name ('a01', 'a02', 'a03')
-       * An Exegesis name ('e01', 'e02', 'e03')
-       * An article name ('m01', 'm01-perl6-announcement', 'm02')
-       * A function name from Synopsis 29
-       * An entry in the Perl 6 Table Index ('%', '!=', 'split')
-       * The Perl 6 Table Index itself ('table_index')
-       * A path to a file containing Pod ('/some/file.pod')
+    App::Grok - Does most of grok's heavy lifting
 
 DESCRIPTION
-    This little application is intended to be a "perldoc" for Perl 6.
+    This class provides the main functionality needed by grok. It has some
+    methods you can use if you need to hook into grok.
 
-  Prior art and inspiration
-    Perl 5's "perldoc" (<http://perldoc.perl.org/perldoc.html>)
-    Python's "pydoc" (<http://docs.python.org/library/pydoc.html>)
-    Ruby's "ri"
-    (<http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/lib/rdoc/>)
-    <http://svn.pugscode.org/pugs/ext/Perldoc/>
-    <http://svn.pugscode.org/pugs/examples/perldoc.pl>
+METHODS
+  "new"
+    This is the constructor. It takes no arguments.
 
-CAVEATS
-  Limitations of "Perl6::Perldoc"
-    *The following only affects Pod 6 documents.*
+  "run"
+    If you call this method, it will look at the command line arguments in
+    @ARGV and act accordingly. This is basically what the "grok" program
+    does. Takes no arguments.
 
-    * Long lines are not wrapped to fit your terminal.
+  "target_index"
+    Takes no arguments. Returns a list of all the targets known to "grok".
 
-    * Extraneous whitespace in paragraphs is preserved, counter to the spec.
+  "detect_source"
+    Takes a filename as an argument. Returns the name of the appropriate
+    "App::Grok::*" class to parse it. Returns nothing if the file doesn't
+    contain any Pod.
 
-    * Formatting codes using french quotes ("C«»") aren't parsed correctly,
-      so they are rendered verbatim.
+  "locate_target"
+    Takes a target name as an argument. Returns the path to the target, or
+    nothing if the target is not recognized.
 
-    * Formatting codes within "=table" blocks are ignored.
+  "render_target"
+    Takes two arguments, a target and the name of an output format. Returns
+    a string containing the rendered documentation, or nothing if the target
+    is unrecognized.
+
+  "render_file"
+    Takes two arguments, a filename and the name of an output format.
+    Returns a string containing the rendered document. Note: this method is
+    called by "render_target".
 
 AUTHOR
     Hinrik Örn Sigurðsson, hinrik.sig@gmail.com

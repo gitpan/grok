@@ -1,43 +1,67 @@
+
 use strict;
 use warnings;
-use inc::Module::Install;
-use 5.006;
 
-my $mi = '0.94';
-if ($inc::Module::Install::VERSION lt $mi) {
-    die "Your Module::Install is older than $mi, please upgrade it";
+ BEGIN { require 5.006; } 
+
+use ExtUtils::MakeMaker 6.31;
+
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Perl 6 documentation reader',
+  'AUTHOR' => 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>',
+  'BUILD_REQUIRES' => {
+    'Test::More' => '0.47',
+    'Test::Script' => '1.07'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'grok',
+  'EXE_FILES' => [
+    'bin/grok'
+  ],
+  'LICENSE' => 'artistic_2',
+  'NAME' => 'grok',
+  'PREREQ_PM' => {
+    'File::HomeDir' => '0',
+    'File::ShareDir' => '0',
+    'File::Temp' => '0',
+    'Getopt::Long' => '2.33',
+    'IO::Interactive' => '0',
+    'LWP::UserAgent' => '0',
+    'Perl6::Doc' => '0.44',
+    'Perl6::Perldoc' => '0.0.5',
+    'Perl6::Perldoc::To::Ansi' => '0.07',
+    'Pod::Parser' => '1.36',
+    'Pod::Text::Ansi' => '0.04',
+    'Pod::Xhtml' => '0'
+  },
+  'VERSION' => '0.22',
+  'test' => {
+    'TESTS' => 't/*.t t/02_source/*.t t/03_opts/*.t t/04_targets/*.t'
+  }
+);
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
 }
 
-name           ('grok');
-perl_version   ('5.006');
-author         ('Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>');
-abstract       ('Perl 6 documentation reader');
-version_from   ('lib/App/Grok.pm');
-install_script ('script/grok');
-no_index       (directory => 't_source');
-license        ('artistic_2');
-homepage       ('http://svn.pugscode.org/pugs/docs/u4x/README');
-githubmeta     ();
-requires       ('Getopt::Long'             => '2.33');
-requires       ('IO::Interactive'          => '0');
-requires       ('File::HomeDir'            => '0');
-requires       ('File::ShareDir'           => '0');
-requires       ('File::Temp'               => '0');
-requires       ('LWP::UserAgent'           => '0');
-requires       ('Perl6::Doc'               => '0.44');
-requires       ('Perl6::Perldoc'           => '0.0.5');
-requires       ('Perl6::Perldoc::To::Ansi' => '0.07');
-requires       ('Pod::Text::Ansi'          => '0.04');
-requires       ('Pod::Xhtml'               => '0');
-requires       ('Pod::Parser'              => '1.36');
-recommends     ('Term::ProgressBar'        => '0');
-recommends     ('Win32::Console::ANSI'     => '0') if $^O eq 'Win32';
-test_requires  ('Test::More'               => '0');
-test_requires  ('Test::Script'             => '0');
-#author_requires('Perl::Critic'             => '1.098');
-#author_requires('Test::Perl::Critic'       => '0');
-#author_requires('Test::Pod'                => '0');
-#author_requires('Test::Pod::Coverage'      => '0');
-tests_recursive();
-WriteAll();
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
 

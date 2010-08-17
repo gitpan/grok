@@ -1,9 +1,9 @@
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use File::Spec::Functions 'catfile';
 use Test::More tests => 6;
 
-my $script = catfile('script', 'grok');
+my $script = catfile('bin', 'grok');
 my $index_short = qx/$^X $script -i/;
 my $index_long  = qx/$^X $script --index/;
 

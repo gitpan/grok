@@ -1,9 +1,14 @@
 package App::Grok::Resource::u4x;
+BEGIN {
+  $App::Grok::Resource::u4x::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Resource::u4x::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
-our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(u4x_index u4x_fetch u4x_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -42,6 +47,8 @@ sub _build_index {
 }
 
 1;
+
+=encoding utf8
 
 =head1 NAME
 

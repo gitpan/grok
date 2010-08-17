@@ -1,12 +1,17 @@
 package App::Grok::Resource::Spec;
+BEGIN {
+  $App::Grok::Resource::Spec::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Resource::Spec::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use App::Grok::Common qw<data_dir download>;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir catfile splitpath>;
 
-our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(spec_index spec_fetch spec_locate spec_update);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -108,6 +113,9 @@ sub _build_index {
 }
 
 1;
+
+=encoding utf8
+
 =head1 NAME
 
 App::Grok::Resource::Spec - Perl 6 specification resource for grok

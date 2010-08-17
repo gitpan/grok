@@ -1,13 +1,18 @@
 package App::Grok::Resource::Tablet;
+BEGIN {
+  $App::Grok::Resource::Tablet::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Resource::Tablet::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use App::Grok::Common qw<data_dir download>;
 use File::ShareDir qw<dist_dir>;
 use File::Spec::Functions qw<catdir catfile>;
 use File::stat;
 
-our $VERSION = '0.21';
 use base qw<Exporter>;
 our @EXPORT_OK = qw<tablet_index tablet_fetch tablet_locate tablet_update>;
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -123,13 +128,16 @@ sub _build_tablet {
         $tablet{$entry} .= $line if defined $entry;
     }
     while (my ($key, $value) = each %tablet) {
-        $tablet{$key} = "=encoding UTF-8\n\n$value";
+        $tablet{$key} = "=encoding utf8\n\n$value";
     }
 
     return;
 }
 
 1;
+
+=encoding utf8
+
 =head1 NAME
 
 App::Grok::Resource::Tablet - Perl 6 Tablet Index resource for grok

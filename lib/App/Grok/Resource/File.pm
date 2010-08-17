@@ -1,9 +1,14 @@
 package App::Grok::Resource::File;
+BEGIN {
+  $App::Grok::Resource::File::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::Resource::File::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
-our $VERSION = '0.21';
 use base qw(Exporter);
 our @EXPORT_OK = qw(file_index file_fetch file_locate);
 our %EXPORT_TAGS = ( ALL => [@EXPORT_OK] );
@@ -37,6 +42,9 @@ sub file_locate {
 }
 
 1;
+
+=encoding utf8
+
 =head1 NAME
 
 App::Grok::Resource::File - Standard file resource for grok

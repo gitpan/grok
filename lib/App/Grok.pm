@@ -1,7 +1,13 @@
 package App::Grok;
+BEGIN {
+  $App::Grok::AUTHORITY = 'cpan:HINRIK';
+}
+BEGIN {
+  $App::Grok::VERSION = '0.22';
+}
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use App::Grok::Resource::File qw<:ALL>;
 use App::Grok::Resource::Functions qw<:ALL>;
 use App::Grok::Resource::Spec qw<:ALL>;
@@ -15,7 +21,6 @@ use Getopt::Long qw<:config bundling>;
 use List::Util qw<first>;
 use Pod::Usage;
 
-our $VERSION = '0.21';
 my %opt;
 
 our $GOT_ANSI;
@@ -94,7 +99,12 @@ sub _get_options {
         'T|no-pager'    => \$opt{no_pager},
         'u|unformatted' => sub { $opt{output} = 'pod' },
         'U|update'      => \$opt{update},
-        'V|version'  => sub { print "grok $VERSION\n"; exit },
+        'V|version'  => sub {
+            no strict 'vars';
+            my $version = defined $VERSION ? $VERSION : 'dev-git';
+            print "grok $version\n";
+            exit;
+        },
     ) or pod2usage();
 
     if (!$opt{update} && !$opt{index} && !defined $opt{file} && !@ARGV) {
@@ -202,7 +212,7 @@ sub _print {
 
 1;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
