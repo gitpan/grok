@@ -3,7 +3,7 @@ BEGIN {
   $App::Grok::Resource::Tablet::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $App::Grok::Resource::Tablet::VERSION = '0.22';
+  $App::Grok::Resource::Tablet::VERSION = '0.23';
 }
 
 use strict;

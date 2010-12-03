@@ -3,7 +3,7 @@ BEGIN {
   $App::Grok::Parser::Pod5::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $App::Grok::Parser::Pod5::VERSION = '0.22';
+  $App::Grok::Parser::Pod5::VERSION = '0.23';
 }
 
 use strict;

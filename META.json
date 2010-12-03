@@ -4,7 +4,7 @@
       "Hinrik \u00c3\u0096rn Sigur\u00c3\u00b0sson <hinrik.sig@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.101612, CPAN::Meta::Converter version 2.101670",
+   "generated_by" : "Dist::Zilla version 4.102342, CPAN::Meta::Converter version 2.102400",
    "license" : [
       "artistic_2"
    ],
@@ -21,12 +21,6 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Test::More" : "0.47",
-            "Test::Script" : "1.07"
-         }
-      },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "6.31"
@@ -43,6 +37,7 @@
             "File::Temp" : 0,
             "Getopt::Long" : "2.33",
             "IO::Interactive" : 0,
+            "IO::Socket::SSL" : 0,
             "LWP::UserAgent" : 0,
             "Perl6::Doc" : "0.44",
             "Perl6::Perldoc" : "v0.0.5",
@@ -51,6 +46,12 @@
             "Pod::Text::Ansi" : "0.04",
             "Pod::Xhtml" : 0,
             "perl" : "5.006"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.47",
+            "Test::Script" : "1.07"
          }
       }
    },
@@ -70,7 +71,7 @@
          "web" : "http://github.com/hinrik/grok"
       }
    },
-   "version" : "0.22",
+   "version" : "0.23",
    "x_authority" : "cpan:HINRIK"
 }
 
