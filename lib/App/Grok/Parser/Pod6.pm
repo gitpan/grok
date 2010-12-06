@@ -3,7 +3,7 @@ BEGIN {
   $App::Grok::Parser::Pod6::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $App::Grok::Parser::Pod6::VERSION = '0.23';
+  $App::Grok::Parser::Pod6::VERSION = '0.24';
 }
 
 # blows up if we use strict before this, damn source filter

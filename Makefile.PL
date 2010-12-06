@@ -32,14 +32,14 @@ my %WriteMakefileArgs = (
     'IO::Interactive' => '0',
     'IO::Socket::SSL' => '0',
     'LWP::UserAgent' => '0',
-    'Perl6::Doc' => '0.44',
+    'Perl6::Doc' => '0.47',
     'Perl6::Perldoc' => '0.0.5',
     'Perl6::Perldoc::To::Ansi' => '0.07',
     'Pod::Parser' => '1.36',
     'Pod::Text::Ansi' => '0.04',
     'Pod::Xhtml' => '0'
   },
-  'VERSION' => '0.23',
+  'VERSION' => '0.24',
   'test' => {
     'TESTS' => 't/*.t t/02_source/*.t t/03_opts/*.t t/04_targets/*.t'
   }
