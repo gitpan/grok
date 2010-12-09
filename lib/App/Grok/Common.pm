@@ -3,7 +3,7 @@ BEGIN {
   $App::Grok::Common::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $App::Grok::Common::VERSION = '0.24';
+  $App::Grok::Common::VERSION = '0.25';
 }
 
 use strict;

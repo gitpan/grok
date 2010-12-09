@@ -42,5 +42,5 @@ resources:
   homepage: http://search.cpan.org/dist/grok/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hinrik/grok.git
-version: 0.24
+version: 0.25
 x_authority: cpan:HINRIK

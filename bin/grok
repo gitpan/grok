@@ -2,7 +2,7 @@
 
 package grok;
 BEGIN {
-  $grok::VERSION = '0.24';
+  $grok::VERSION = '0.25';
 }
 use strict;
 use warnings FATAL => 'all';

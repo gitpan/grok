@@ -39,7 +39,7 @@ my %WriteMakefileArgs = (
     'Pod::Text::Ansi' => '0.04',
     'Pod::Xhtml' => '0'
   },
-  'VERSION' => '0.24',
+  'VERSION' => '0.25',
   'test' => {
     'TESTS' => 't/*.t t/02_source/*.t t/03_opts/*.t t/04_targets/*.t'
   }
