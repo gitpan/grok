@@ -2,7 +2,10 @@
 
 package grok;
 BEGIN {
-  $grok::VERSION = '0.25';
+  $grok::AUTHORITY = 'cpan:HINRIK';
+}
+{
+  $grok::VERSION = '0.26';
 }
 use strict;
 use warnings FATAL => 'all';

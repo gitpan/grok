@@ -2,8 +2,8 @@ package App::Grok::Resource::Tablet;
 BEGIN {
   $App::Grok::Resource::Tablet::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $App::Grok::Resource::Tablet::VERSION = '0.25';
+{
+  $App::Grok::Resource::Tablet::VERSION = '0.26';
 }
 
 use strict;

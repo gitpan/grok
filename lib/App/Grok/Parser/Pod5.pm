@@ -2,8 +2,8 @@ package App::Grok::Parser::Pod5;
 BEGIN {
   $App::Grok::Parser::Pod5::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $App::Grok::Parser::Pod5::VERSION = '0.25';
+{
+  $App::Grok::Parser::Pod5::VERSION = '0.26';
 }
 
 use strict;

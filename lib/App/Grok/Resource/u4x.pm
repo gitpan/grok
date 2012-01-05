@@ -2,8 +2,8 @@ package App::Grok::Resource::u4x;
 BEGIN {
   $App::Grok::Resource::u4x::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $App::Grok::Resource::u4x::VERSION = '0.25';
+{
+  $App::Grok::Resource::u4x::VERSION = '0.26';
 }
 
 use strict;

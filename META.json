@@ -4,7 +4,7 @@
       "Hinrik \u00c3\u0096rn Sigur\u00c3\u00b0sson <hinrik.sig@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.102342, CPAN::Meta::Converter version 2.102400",
+   "generated_by" : "Dist::Zilla version 4.300005, CPAN::Meta::Converter version 2.112621",
    "license" : [
       "artistic_2"
    ],
@@ -23,7 +23,7 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.31"
+            "ExtUtils::MakeMaker" : "6.30"
          }
       },
       "runtime" : {
@@ -61,7 +61,7 @@
          "mailto" : "bug-grok@rt.cpan.org",
          "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=grok"
       },
-      "homepage" : "http://search.cpan.org/dist/grok/",
+      "homepage" : "http://metacpan.org/release/grok",
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
@@ -71,7 +71,7 @@
          "web" : "http://github.com/hinrik/grok"
       }
    },
-   "version" : "0.25",
+   "version" : "0.26",
    "x_authority" : "cpan:HINRIK"
 }
 

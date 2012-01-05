@@ -6,9 +6,9 @@ build_requires:
   Test::More: 0.47
   Test::Script: 1.07
 configure_requires:
-  ExtUtils::MakeMaker: 6.31
+  ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.102342, CPAN::Meta::Converter version 2.102400'
+generated_by: 'Dist::Zilla version 4.300005, CPAN::Meta::Converter version 2.112621'
 license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -39,8 +39,8 @@ requires:
   perl: 5.006
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=grok
-  homepage: http://search.cpan.org/dist/grok/
+  homepage: http://metacpan.org/release/grok
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hinrik/grok.git
-version: 0.25
+version: 0.26
 x_authority: cpan:HINRIK

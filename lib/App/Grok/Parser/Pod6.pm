@@ -2,8 +2,8 @@ package App::Grok::Parser::Pod6;
 BEGIN {
   $App::Grok::Parser::Pod6::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $App::Grok::Parser::Pod6::VERSION = '0.25';
+{
+  $App::Grok::Parser::Pod6::VERSION = '0.26';
 }
 
 # blows up if we use strict before this, damn source filter

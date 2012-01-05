@@ -2,46 +2,46 @@
 use strict;
 use warnings;
 
-BEGIN { require 5.006; }
+use 5.006;
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Perl 6 documentation reader',
-  'AUTHOR' => 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>',
-  'BUILD_REQUIRES' => {
-    'Test::More' => '0.47',
-    'Test::Script' => '1.07'
+  "ABSTRACT" => "Perl 6 documentation reader",
+  "AUTHOR" => "Hinrik \303\226rn Sigur\303\260sson <hinrik.sig\@gmail.com>",
+  "BUILD_REQUIRES" => {
+    "Test::More" => "0.47",
+    "Test::Script" => "1.07"
   },
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
   },
-  'DISTNAME' => 'grok',
-  'EXE_FILES' => [
-    'bin/grok'
+  "DISTNAME" => "grok",
+  "EXE_FILES" => [
+    "bin/grok"
   ],
-  'LICENSE' => 'artistic_2',
-  'NAME' => 'grok',
-  'PREREQ_PM' => {
-    'File::HomeDir' => '0',
-    'File::ShareDir' => '0',
-    'File::Temp' => '0',
-    'Getopt::Long' => '2.33',
-    'IO::Interactive' => '0',
-    'IO::Socket::SSL' => '0',
-    'LWP::UserAgent' => '0',
-    'Perl6::Doc' => '0.47',
-    'Perl6::Perldoc' => '0.0.5',
-    'Perl6::Perldoc::To::Ansi' => '0.07',
-    'Pod::Parser' => '1.36',
-    'Pod::Text::Ansi' => '0.04',
-    'Pod::Xhtml' => '0'
+  "LICENSE" => "artistic_2",
+  "NAME" => "grok",
+  "PREREQ_PM" => {
+    "File::HomeDir" => 0,
+    "File::ShareDir" => 0,
+    "File::Temp" => 0,
+    "Getopt::Long" => "2.33",
+    "IO::Interactive" => 0,
+    "IO::Socket::SSL" => 0,
+    "LWP::UserAgent" => 0,
+    "Perl6::Doc" => "0.47",
+    "Perl6::Perldoc" => "0.0.5",
+    "Perl6::Perldoc::To::Ansi" => "0.07",
+    "Pod::Parser" => "1.36",
+    "Pod::Text::Ansi" => "0.04",
+    "Pod::Xhtml" => 0
   },
-  'VERSION' => '0.25',
-  'test' => {
-    'TESTS' => 't/*.t t/02_source/*.t t/03_opts/*.t t/04_targets/*.t'
+  "VERSION" => "0.26",
+  "test" => {
+    "TESTS" => "t/*.t t/02_source/*.t t/03_opts/*.t t/04_targets/*.t"
   }
 );
 

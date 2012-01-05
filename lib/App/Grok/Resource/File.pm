@@ -2,8 +2,8 @@ package App::Grok::Resource::File;
 BEGIN {
   $App::Grok::Resource::File::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $App::Grok::Resource::File::VERSION = '0.25';
+{
+  $App::Grok::Resource::File::VERSION = '0.26';
 }
 
 use strict;
